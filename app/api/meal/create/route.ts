@@ -1,4 +1,4 @@
-import { mealContentScheme, mealRequirementScheme } from "@/app/validators";
+import { mealContentDataScheme, mealRequirementScheme } from "@/app/validators";
 import { CreateMealLimiter } from "../../config/limiter";
 import { handleRouteError } from "@/app/helpers";
 import generateMealImageByDiscordScraping from "./discord";
@@ -21,11 +21,11 @@ export async function POST(request: Request) {
     const { promptPhoto, ...dataWithoutPrompt } = openaiMealData;
     const imageUrl = await generateMealImageByDiscordScraping(promptPhoto);
     const mealContent = { ...dataWithoutPrompt, imageUrl };
-    const parsedMealContent = mealContentScheme.safeParse(mealContent);
-    if (!parsedMealContent.success)
+    const parsedMealContentData = mealContentDataScheme.safeParse(mealContent);
+    if (!parsedMealContentData.success)
       throw new Error("500 - Internal Server Error.");
 
-    return Response.json(parsedMealContent.data);
+    return Response.json(parsedMealContentData.data, { status: 200 });
   } catch (e: any) {
     return Response.json(...handleRouteError(e));
   }

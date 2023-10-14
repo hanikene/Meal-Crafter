@@ -1,10 +1,8 @@
+import { OPEN_AI_PROMPT } from "./constants";
 import { MealRequirements } from "./types";
 
 const generateChatPrompt = (mealRequirements: MealRequirements) =>
-  `${process.env.OPEN_AI_PROMPT} ${JSON.stringify(mealRequirements).replace(
-    /"/g,
-    "'"
-  )}`;
+  `${OPEN_AI_PROMPT} ${JSON.stringify(mealRequirements).replace(/"/g, "'")}`;
 
 export const generateOpenaiBodyPost = (mealRequirements: MealRequirements) => ({
   model: "gpt-3.5-turbo",

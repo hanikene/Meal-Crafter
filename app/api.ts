@@ -1,7 +1,7 @@
 import axios from "axios";
 import {
   ingredientListClientScheme,
-  mealContentScheme,
+  mealContentDataScheme,
   mealRequirementScheme,
 } from "./validators";
 import { queryScheme } from "./validators";
@@ -19,7 +19,7 @@ export const getIngredientList = async (query: string): Promise<string[]> => {
     if (!parsedData.success) throw new Error();
     return parsedData.data.result;
   } catch (e) {
-    throw new Error("Error when getting list of ingredients.");
+    throw new Error("api: Error when getting list of ingredients.");
   }
 };
 
@@ -32,11 +32,11 @@ export const createNewMeal = async (mealRequirements: MealRequirements) => {
       `${API_URL}/api/meal/create`,
       mealRequirements
     );
-    const parsedData = mealContentScheme.safeParse(data);
+    const parsedData = mealContentDataScheme.safeParse(data);
     if (!parsedData.success) throw new Error();
 
     return parsedData.data;
   } catch (e) {
-    throw new Error("Error when creating new meal.");
+    throw new Error("api: Error when creating new meal.");
   }
 };

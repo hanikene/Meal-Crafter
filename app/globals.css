@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
+
 .btn-gradient {
   transition: background-image 0.5s, background-position 0.5s;
   background-size: 200% auto;
@@ -39,5 +43,26 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+.loading-dots::after {
+  content: "";
+  animation: loadingDots 1.5s infinite steps(3);
+}
+
+@keyframes loadingDots {
+  0%,
+  100% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75% {
+    content: "...";
   }
 }

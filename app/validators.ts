@@ -104,8 +104,15 @@ export const openaiContentScheme = z.object({
   }),
 });
 
-export const mealContentScheme = openaiContentScheme
+export const mealContentDataScheme = openaiContentScheme
   .omit({ promptPhoto: true })
   .and(z.object({ imageUrl: z.string().url() }));
 
 export const imageUrlScheme = z.string().url();
+
+export const mealContentScheme = z.discriminatedUnion("status", [
+  z.object({ status: z.literal("SUCCESS"), data: mealContentDataScheme }),
+  z.object({ status: z.literal("LOADING"), data: z.null() }),
+  z.object({ status: z.literal("ERROR"), data: z.null() }),
+  z.object({ status: z.literal("INIT"), data: z.null() }),
+]);

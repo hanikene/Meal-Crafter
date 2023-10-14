@@ -15,9 +15,9 @@ const generateMealImageByDiscordScraping = async (prompt: string) => {
 
     await handleWaitingList(isProcessing);
     isProcessing.value = true;
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
-    await page.setViewport({ width: 900, height: 700 });
+    await page.setViewport({ width: 800, height: 600 });
     await page.goto(process.env.DISCORD_LINK);
     await page.waitForSelector('input[name="email"]');
     await page.type('input[name="email"]', process.env.DISCORD_EMAIL);

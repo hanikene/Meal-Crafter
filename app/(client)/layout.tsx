@@ -6,9 +6,10 @@ import "@/app/globals.css";
 import Navbar from "../components/Navbar";
 import ErrorModal from "../components/ErrorModal";
 import ErrorProvider from "../hooks/ErrorContext";
+import MealProvider from "../hooks/MealContext";
 
 const inter = Poppins({
-  weight: ["400", "700", "900"],
+  weight: ["400", "600", "700", "900"],
   style: "normal",
   subsets: ["latin"],
   display: "swap",
@@ -23,15 +24,18 @@ export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
+  resultModal: React.ReactNode;
 }) {
   return (
     <html lang="en">
       <body className={inter.className + " text-black bg-neutral-50"}>
         <Navbar />
-        <ErrorProvider>
-          <ErrorModal />
-          <QueryClientProvider>{children}</QueryClientProvider>
-        </ErrorProvider>
+        <MealProvider>
+          <ErrorProvider>
+            <ErrorModal />
+            <QueryClientProvider>{children}</QueryClientProvider>
+          </ErrorProvider>
+        </MealProvider>
         <Footer />
       </body>
     </html>

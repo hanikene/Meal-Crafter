@@ -1,18 +1,11 @@
 "use client";
 
-import {
-  ChangeEvent,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import { getIngredientList } from "../../api";
 import Spinner from "../Spinner";
 import { ErrorContext } from "@/app/hooks/ErrorContext";
-import Error from "next/error";
 
 const IngredientDropdown = ({
   addIngredient,
@@ -22,17 +15,13 @@ const IngredientDropdown = ({
   const [isListDisplayed, setListDisplayed] = useState(false);
   const [input, setInput] = useState("");
   const debouncedInput = useDebounce(input);
+  const inputRef = useRef(null);
   const [_, setError] = useContext(ErrorContext);
   const {
     data: ingredientData,
     isSuccess,
     isFetching,
-    error: queryError,
-  }: {
-    data: string[];
-    isSuccess: boolean;
-    isFetching: boolean;
-    error: any;
+    error,
   } = useQuery({
     queryKey: ["ingredients", debouncedInput],
     queryFn: () => getIngredientList(debouncedInput),
@@ -41,8 +30,26 @@ const IngredientDropdown = ({
   });
 
   useEffect(() => {
-    if (queryError?.message) setError(queryError.message);
-  }, [queryError]);
+    const queryError = error as any;
+    if (queryError && typeof queryError.message === "string") {
+      const [messageCode, messageText] = queryError.message.split(": ");
+      if (messageCode === "api") setError(messageText);
+    }
+  }, [error, setError]);
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const handleClickOutside = (e: any) => {
+    // @ts-ignore
+    if (inputRef.current && !inputRef.current.contains(e.target)) {
+      setListDisplayed(false);
+    }
+  };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -53,16 +60,11 @@ const IngredientDropdown = ({
     addIngredient(ingredient);
   };
 
-  const closeDisplayList = useCallback(async () => {
-    setTimeout(() => {
-      setListDisplayed(false);
-    }, 150);
-  }, [setListDisplayed]);
-
   return (
     <div className="bg-neutral-100 border-neutral-200 max-w-full h-12 rounded-t-md flex items-center relative pr-3">
       <input
         id="ingredient"
+        ref={inputRef}
         className="bg-transparent h-full grow px-3 outline-none"
         type="text"
         onChange={handleInputChange}
@@ -70,10 +72,9 @@ const IngredientDropdown = ({
         placeholder="Add an ingredient"
         autoComplete="false"
         autoSave="false"
-        onFocus={() => {
+        onClick={() => {
           setListDisplayed(true);
         }}
-        onBlur={closeDisplayList}
       />
       {isFetching && <Spinner spinnerColor="black" />}
       {isListDisplayed && isSuccess && (
