@@ -1,6 +1,6 @@
 # Meal Crafter - AI-Powered Meal Preparation App
 
-Meal Crafter is a web application built with Next.js v13 that utilizes AI to provide personalized meal recommendations based on user inputs, including ingredients, allergies, and dietary preference. Additionally, it offers the ability to generate meal images using Midjourney by web scraping Discord with puppeteer. This README provides an overview of the project, how to set it up, and how to use it.
+Meal Crafter is a web application built with Next.js v13 that utilizes AI to provide personalized meal recommendations based on user inputs, including ingredients, allergies, and dietary preferences. Additionally, it offers the ability to generate meal images using Midjourney by web scraping Discord with Puppeteer.
 
 ## Demo
 
